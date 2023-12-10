@@ -1,21 +1,11 @@
 <script setup lang="ts">
-import HelloWorld from "./components/HelloWorld.vue";
-import Map from "./components/Map.vue";
+import Test from "./components/Test.vue";
 import Buttons from "./components/Buttons.vue";
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Aboba" />
-  <Map />
-  <Buttons :num=112 />
+  <Test />
+  <Buttons :num="112" />
 </template>
 
 <style scoped>

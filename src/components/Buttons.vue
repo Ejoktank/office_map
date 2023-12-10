@@ -13,10 +13,3 @@ const count = ref(0);
     <div class="">{{ count }}</div>
   </div>
 </template>
-
-<style>
-.container {
-  padding: 20px;
-  background-color: #f4f4f4;
-}
-</style>

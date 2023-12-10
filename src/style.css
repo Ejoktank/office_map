@@ -77,3 +77,10 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.container {
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #e0e9ff;
+  border-radius: 10px;
+}
