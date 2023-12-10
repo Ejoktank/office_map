@@ -1,26 +1,18 @@
 <script setup lang="ts">
-import Test from "./components/Test.vue";
-import Buttons from "./components/Buttons.vue";
+import CanvasMap from './components/CanvasMap.vue'
+import Map from './components/Map.vue'
+// import Test from "./components/Test.vue";
+// import Buttons from "./components/Buttons.vue";
 </script>
 
 <template>
-  <Test />
-  <Buttons :num="112" />
+  <Map />
+  <!-- <Buttons :num="112" />
+  <Test /> -->
+  <div class=""></div>
+  <CanvasMap />
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
 </style>
