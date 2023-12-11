@@ -21,34 +21,34 @@ const updateCanvasSize = () => {
 const drawCanvas = (canvas: HTMLCanvasElement) => {
   const ctx = canvas.getContext("2d");
   if (ctx) {
-    // Очистка канваса
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Отрисовка карты
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Добавляем картинку
     const img = new Image();
     img.src = "../../public/plan1.jpg";
     img.onload = function () {
-      const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
-      const width = img.width * scale;
-      const height = img.height * scale;
-      const x = (canvas.width - width) / 2;
-      const y = (canvas.height - height) / 2;
+      const aspectRatio = img.width / img.height;
+      let newWidth = canvas.width;
+      let newHeight = canvas.width / aspectRatio;
 
-      ctx.drawImage(img, x, y, width, height);
+      if (newHeight > canvas.height) {
+        newHeight = canvas.height;
+        newWidth = canvas.height * aspectRatio;
+      }
+
+      const x = (canvas.width - newWidth) / 2;
+      const y = (canvas.height - newHeight) / 2;
+
+      ctx.drawImage(img, x, y, newWidth, newHeight); // Рисуем изображение, учитывая его масштаб
+      // Пример отрисовки маркера
+      ctx.fillStyle = "red";
+      ctx.fillRect(250, 250, 50, 50);
     };
 
-    // Пример отрисовки маркера
-    ctx.fillStyle = "red";
-    ctx.fillRect(150, 150, 10, 10);
   }
 };
+
 onMounted(() => {
   window.addEventListener("resize", updateCanvasSize);
-
-  // Первичное рисование
   const canvas = mapCanvas.value;
   if (canvas) {
     drawCanvas(canvas);
