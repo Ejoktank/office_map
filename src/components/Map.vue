@@ -1,22 +1,22 @@
-<template>
-  <canvas ref="mapCanvas"></canvas>
-</template>
-
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted } from "vue";
+
+interface MarkerProps {
+  x: number;
+  y: number;
+  plan: string;
+  employee: string;
+  ctx: CanvasRenderingContext2D | null;
+}
 
 const mapCanvas = ref<HTMLCanvasElement | null>(null);
-let animationFrameId: number | null = null;
 
-const updateCanvasSize = () => {
-  const canvas = mapCanvas.value;
-  if (canvas) {
-    canvas.width = window.innerWidth > 1280 ? 1280 : window.innerWidth - 90;
-    canvas.height = window.innerHeight - 90;
-    cancelAnimationFrame(animationFrameId!);
-    animationFrameId = requestAnimationFrame(() => drawCanvas(canvas));
-  }
-};
+const markers: MarkerProps[] = [
+  { x: 100, y: 150, ctx: null, employee: "Ivan", plan: "../../public/plan1.jpg" },
+  { x: 200, y: 150, ctx: null, employee: "Oleg", plan: "../../public/plan1.jpg" },
+  { x: 200, y: 250, ctx: null, employee: "Sergey", plan: "../../public/plan1.jpg" },
+  { x: 140, y: 450, ctx: null, employee: "Andrew", plan: "../../public/plan1.jpg" },
+];
 
 const drawCanvas = (canvas: HTMLCanvasElement) => {
   const ctx = canvas.getContext("2d");
@@ -38,23 +38,39 @@ const drawCanvas = (canvas: HTMLCanvasElement) => {
       const x = (canvas.width - newWidth) / 2;
       const y = (canvas.height - newHeight) / 2;
 
-      ctx.drawImage(img, x, y, newWidth, newHeight); // Рисуем изображение, учитывая его масштаб
-      // Пример отрисовки маркера
-      ctx.fillStyle = "red";
-      ctx.fillRect(250, 250, 50, 50);
-    };
+      ctx.drawImage(img, x, y, newWidth, newHeight);
 
+      markers.map(marker => {
+        marker.ctx = ctx
+        return drawMarker(marker)
+      })
+    };
   }
 };
 
 onMounted(() => {
-  window.addEventListener("resize", updateCanvasSize);
   const canvas = mapCanvas.value;
   if (canvas) {
     drawCanvas(canvas);
   }
 });
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", updateCanvasSize);
-});
+
+function drawMarker(props: MarkerProps) {
+  if (props.ctx) {
+    props.ctx.fillStyle = "red";
+    props.ctx.fillRect(props.x, props.y, 50, 50);
+  }
+}
 </script>
+
+<template>
+  <div class="border">
+    <canvas ref="mapCanvas" :width="1000" :height="600"></canvas>
+  </div>
+</template>
+
+<style scoped>
+.border {
+  border: 2px solid black;
+}
+</style>

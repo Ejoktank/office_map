@@ -12,9 +12,7 @@ function setWindowSize() {
 </script>
 
 <template>
-  <Map :width="windowSize.w > 1280 ? 1280 :windowSize.w - 90" :height="windowSize.h - 90" />
-  <div></div>
-  <!-- <CanvasMap  :w="600" :h="400" /> -->
+  <Map />
 </template>
 
 <style scoped></style>
