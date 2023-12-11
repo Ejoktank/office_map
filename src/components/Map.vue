@@ -1,47 +1,60 @@
-<script setup lang="ts">
-import { ref, onMounted } from "vue";
-
-const mapCanvas = ref<HTMLCanvasElement | null>(null);
-
-onMounted(() => {
-  const canvas = mapCanvas.value;
-
-  if (canvas) {
-    const ctx = canvas.getContext("2d");
-
-    if (ctx) {
-      // Добавляем проверку, чтобы избежать ошибки, если getContext вернет null
-      // Отрисовка карты
-      ctx.fillStyle = "lightblue";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Пример отрисовки маркера
-      ctx.fillStyle = "red";
-      ctx.fillRect(50, 50, 10, 10);
-
-      // Рисуем круг
-      ctx.beginPath();
-      ctx.arc(200, 150, 50, 0, Math.PI * 2);
-      ctx.fillStyle = "lightgreen";
-      ctx.fill();
-
-      // А как?
-      const img = new Image();
-      img.onload = function () {
-        ctx.drawImage(img, 10, 10);
-      };
-      img.src = "../../vue.svg";
-
-      ctx.fillStyle = "black"
-      ctx.font = "30px Arial";
-      ctx.fillText("Привет, мир!", 50, 50);
-    }
-  }
-});
-</script>
-
 <template>
   <canvas ref="mapCanvas"></canvas>
 </template>
 
-<!-- Стили для размера и стилей canvas могут быть добавлены здесь или в отдельном файле стилей -->
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from "vue";
+
+const mapCanvas = ref<HTMLCanvasElement | null>(null);
+let animationFrameId: number | null = null;
+
+const updateCanvasSize = () => {
+  const canvas = mapCanvas.value;
+  if (canvas) {
+    canvas.width = window.innerWidth > 1280 ? 1280 : window.innerWidth - 90;
+    canvas.height = window.innerHeight - 90;
+    cancelAnimationFrame(animationFrameId!);
+    animationFrameId = requestAnimationFrame(() => drawCanvas(canvas));
+  }
+};
+
+const drawCanvas = (canvas: HTMLCanvasElement) => {
+  const ctx = canvas.getContext("2d");
+  if (ctx) {
+    // Очистка канваса
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Отрисовка карты
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Добавляем картинку
+    const img = new Image();
+    img.src = "../../public/plan1.jpg";
+    img.onload = function () {
+      const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+      const width = img.width * scale;
+      const height = img.height * scale;
+      const x = (canvas.width - width) / 2;
+      const y = (canvas.height - height) / 2;
+
+      ctx.drawImage(img, x, y, width, height);
+    };
+
+    // Пример отрисовки маркера
+    ctx.fillStyle = "red";
+    ctx.fillRect(150, 150, 10, 10);
+  }
+};
+onMounted(() => {
+  window.addEventListener("resize", updateCanvasSize);
+
+  // Первичное рисование
+  const canvas = mapCanvas.value;
+  if (canvas) {
+    drawCanvas(canvas);
+  }
+});
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", updateCanvasSize);
+});
+</script>
