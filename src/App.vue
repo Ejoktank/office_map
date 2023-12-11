@@ -1,7 +1,15 @@
 <script setup lang="ts">
-// import CanvasMap from "./components/CanvasMap.vue";
-import Map from "./components/Map.vue";
 import { ref } from "vue";
+import MapWrapper from "./components/MapWrapper.vue";
+
+export interface WorkplacesProps {
+  id: number;
+  x: number;
+  y: number;
+  plan: number;
+  employee: number;
+  ctx?: CanvasRenderingContext2D
+}
 
 const windowSize = ref({ h: 0, w: 0 });
 setWindowSize();
@@ -9,10 +17,17 @@ setWindowSize();
 function setWindowSize() {
   windowSize.value = { h: window.innerHeight, w: window.innerWidth };
 }
+
 </script>
 
 <template>
-  <Map />
+  <div class="container main">
+    <MapWrapper />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.main {
+  height: 100vh;
+}
+</style>
