@@ -8,7 +8,15 @@ export interface WorkplacesProps {
   y: number;
   plan: number;
   employee: number;
-  ctx?: CanvasRenderingContext2D
+  ctx?: CanvasRenderingContext2D;
+}
+
+export interface PlansProps {
+  id: number;
+  height: number;
+  width: number;
+  img: string;
+  name: string;
 }
 
 const windowSize = ref({ h: 0, w: 0 });
@@ -17,7 +25,6 @@ setWindowSize();
 function setWindowSize() {
   windowSize.value = { h: window.innerHeight, w: window.innerWidth };
 }
-
 </script>
 
 <template>

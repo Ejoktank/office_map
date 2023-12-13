@@ -1,27 +1,28 @@
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
-import { WorkplacesProps } from "../App.vue";
-import { workplaces } from "../api/Api";
+import { PlansProps, WorkplacesProps } from "../App.vue";
+import { workplaces, plans } from "../api/Api";
 import Map from "./Map.vue";
 
-// const markers: MarkerProps[] = [
-//   { x: 100, y: 150, employee: 1, plan: 1 },
-//   { x: 200, y: 150, employee: 2, plan: 1 },
-//   { x: 200, y: 250, employee: 3, plan: 1 },
-//   { x: 140, y: 450, employee: 4, plan: 1 },
-// ];
-
-const places = ref<WorkplacesProps[]>();
+const places = ref<WorkplacesProps[]>([]);
+const workplans = ref<PlansProps[]>([]);
+const isDataLoaded = ref(false);
 
 onBeforeMount(async () => {
   places.value = await workplaces();
+  workplans.value = await plans();
+  isDataLoaded.value = true;
 });
-
 </script>
 
 <template>
   <div class="wrapper">
-    <Map :markers="places" />
+    <template v-if="!isDataLoaded">
+      <p>Loading...</p>
+    </template>
+    <template v-else>
+      <Map :workplaces="places" :plans="workplans" />
+    </template>
   </div>
 </template>
 
