@@ -7,6 +7,7 @@ const props = defineProps<{ workplaces: WorkplacesProps[]; plans: PlansProps[] }
 const mapCanvas = ref<HTMLCanvasElement | null>(null);
 const clickCoords = ref<ClickProps>();
 const markerRadius = 20;
+const wrongPixels = 61;
 
 function drawCanvas(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext("2d");
@@ -49,7 +50,7 @@ function drawMarker(props: WorkplacesProps) {
   if (props.ctx) {
     props.ctx.fillStyle = "red";
     props.ctx.beginPath();
-    props.ctx.arc(props.x - markerRadius / 2, props.y - markerRadius / 2, markerRadius, 0, 2 * Math.PI);
+    props.ctx.arc(props.x, props.y, markerRadius, 0, Math.PI * 2);
     props.ctx.fill();
   }
 }
@@ -60,18 +61,15 @@ interface ClickProps {
 }
 
 function handleMapClick(e: MouseEvent) {
-  clickCoords.value = { x: e.clientX, y: e.clientY };
-  const found = props.workplaces.filter(
+  clickCoords.value = { x: e.clientX - wrongPixels, y: e.clientY - wrongPixels };
+  const found = props.workplaces.find(
     (obj) =>
-      e.clientX - markerRadius < obj.x &&
-      obj.x < e.clientX + markerRadius &&
-      e.clientY - markerRadius < obj.x &&
-      obj.x < e.clientY + markerRadius
+      e.clientX - wrongPixels - markerRadius < obj.x &&
+      obj.x < e.clientX - wrongPixels + markerRadius &&
+      e.clientY - wrongPixels - markerRadius < obj.x &&
+      obj.x < e.clientY - wrongPixels + markerRadius
   );
-
-  console.log(found);
-
-  console.log(clickCoords.value);
+  console.log(found?.employee);
 }
 </script>
 
