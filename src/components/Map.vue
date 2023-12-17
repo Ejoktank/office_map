@@ -5,9 +5,8 @@ import { PlansProps, WorkplacesProps } from "../App.vue";
 const props = defineProps<{ workplaces: WorkplacesProps[]; plans: PlansProps[] }>();
 
 const mapCanvas = ref<HTMLCanvasElement | null>(null);
-const clickCoords = ref<ClickProps>();
 const markerRadius = 20;
-const wrongPixels = 61;
+// const imgHeight = ref<number>(0);
 
 function drawCanvas(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext("2d");
@@ -31,9 +30,11 @@ function drawCanvas(canvas: HTMLCanvasElement) {
 
       ctx.drawImage(img, x, y, newWidth, newHeight);
 
-      props?.workplaces?.map((marker) => {
+      props?.workplaces?.forEach((marker) => {
         marker.ctx = ctx;
-        return drawMarker(marker);
+        marker.x = x + (marker.x * (newWidth / img.width))
+        marker.y = y + (marker.y * (newHeight / img.height))
+        drawMarker(marker);
       });
     };
   }
@@ -55,19 +56,17 @@ function drawMarker(props: WorkplacesProps) {
   }
 }
 
-interface ClickProps {
-  x: number;
-  y: number;
-}
-
 function handleMapClick(e: MouseEvent) {
-  clickCoords.value = { x: e.clientX - wrongPixels, y: e.clientY - wrongPixels };
+  const coords = mapCanvas.value?.getBoundingClientRect() ?? {left: 0, top: 0}
+  const pX = coords.top;
+  const pY = coords.left;
+  
   const found = props.workplaces.find(
     (obj) =>
-      e.clientX - wrongPixels - markerRadius < obj.x &&
-      obj.x < e.clientX - wrongPixels + markerRadius &&
-      e.clientY - wrongPixels - markerRadius < obj.x &&
-      obj.x < e.clientY - wrongPixels + markerRadius
+      e.clientX - pX - markerRadius < obj.x &&
+      obj.x < e.clientX - pX + markerRadius &&
+      e.clientY - pY - markerRadius < obj.y &&
+      obj.y < e.clientY - pY + markerRadius
   );
   console.log(found?.employee);
 }
@@ -75,7 +74,7 @@ function handleMapClick(e: MouseEvent) {
 
 <template>
   <div class="map">
-    <canvas ref="mapCanvas" :width="1000" :height="600" @click="handleMapClick"></canvas>
+    <canvas class="canvas" ref="mapCanvas" :width="1000" :height="600" @click="handleMapClick"></canvas>
   </div>
 </template>
 
@@ -83,5 +82,9 @@ function handleMapClick(e: MouseEvent) {
 .map {
   position: relative;
   border: 2px solid black;
+}
+
+.canvas{
+  width: 100%;
 }
 </style>

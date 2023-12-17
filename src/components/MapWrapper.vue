@@ -21,7 +21,14 @@ onBeforeMount(async () => {
       <p>Loading...</p>
     </template>
     <template v-else>
-      <Map :workplaces="places" :plans="workplans" />
+      <div class="">
+        <div class="map_menu">
+          <button class="map_menu-button">Просмотр</button>
+          <button class="map_menu-button">Добавить маркер</button>
+          <button class="map_menu-button">Удалить маркер</button>
+        </div>
+        <Map :workplaces="places" :plans="workplans" />
+      </div>
     </template>
   </div>
 </template>
@@ -29,5 +36,14 @@ onBeforeMount(async () => {
 <style scoped>
 .wrapper {
   position: absolute;
+}
+.map_menu {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  
+}
+.map_menu-button {
+
 }
 </style>

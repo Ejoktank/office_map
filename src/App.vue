@@ -36,5 +36,7 @@ function setWindowSize() {
 <style scoped>
 .main {
   height: 100vh;
+  display: flex;
+  justify-content: center;
 }
 </style>
