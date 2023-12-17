@@ -7,6 +7,9 @@ import Map from "./Map.vue";
 const places = ref<WorkplacesProps[]>([]);
 const workplans = ref<PlansProps[]>([]);
 const isDataLoaded = ref(false);
+const mapState = ref<MapState>("watch");
+
+export type MapState = "watch" | "add" | "delete";
 
 onBeforeMount(async () => {
   places.value = await workplaces();
@@ -23,11 +26,11 @@ onBeforeMount(async () => {
     <template v-else>
       <div class="">
         <div class="map_menu">
-          <button class="map_menu-button">Просмотр</button>
-          <button class="map_menu-button">Добавить маркер</button>
-          <button class="map_menu-button">Удалить маркер</button>
+          <button @click="() => (mapState = 'watch')" class="map_menu-button">Просмотр</button>
+          <button @click="() => (mapState = 'add')" class="map_menu-button">Добавить маркер</button>
+          <button @click="() => (mapState = 'delete')" class="map_menu-button">Удалить маркер</button>
         </div>
-        <Map :workplaces="places" :plans="workplans" />
+        <Map :workplaces="places" :plans="workplans" :state="mapState" />
       </div>
     </template>
   </div>
@@ -41,9 +44,7 @@ onBeforeMount(async () => {
   display: flex;
   justify-content: start;
   align-items: center;
-  
 }
 .map_menu-button {
-
 }
 </style>
