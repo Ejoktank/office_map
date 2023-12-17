@@ -6,7 +6,13 @@ const props = defineProps<{ workplaces: WorkplacesProps[]; plans: PlansProps[] }
 
 const mapCanvas = ref<HTMLCanvasElement | null>(null);
 const markerRadius = 20;
-// const imgHeight = ref<number>(0);
+
+onMounted(() => {
+  const canvas = mapCanvas.value;
+  if (canvas) {
+    drawCanvas(canvas);
+  }
+});
 
 function drawCanvas(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext("2d");
@@ -25,27 +31,27 @@ function drawCanvas(canvas: HTMLCanvasElement) {
         newWidth = canvas.height * aspectRatio;
       }
 
-      const x = (canvas.width - newWidth) / 2;
-      const y = (canvas.height - newHeight) / 2;
+      console.log("imgW", img.width);
+      console.log("canvasW", canvas.width);
+      console.log("newW", newWidth);
+      console.log("imgH", img.height);
+      console.log("canvasH", canvas.height);
+      console.log("newH", newHeight);
+
+      const x = 0;
+      const y = 0;
 
       ctx.drawImage(img, x, y, newWidth, newHeight);
 
       props?.workplaces?.forEach((marker) => {
         marker.ctx = ctx;
-        marker.x = x + (marker.x * (newWidth / img.width))
-        marker.y = y + (marker.y * (newHeight / img.height))
+        marker.x = x + marker.x * (newWidth / img.width);
+        marker.y = y + marker.y * (newHeight / img.height);
         drawMarker(marker);
       });
     };
   }
 }
-
-onMounted(() => {
-  const canvas = mapCanvas.value;
-  if (canvas) {
-    drawCanvas(canvas);
-  }
-});
 
 function drawMarker(props: WorkplacesProps) {
   if (props.ctx) {
@@ -57,10 +63,13 @@ function drawMarker(props: WorkplacesProps) {
 }
 
 function handleMapClick(e: MouseEvent) {
-  const coords = mapCanvas.value?.getBoundingClientRect() ?? {left: 0, top: 0}
-  const pX = coords.top;
-  const pY = coords.left;
-  
+  const coords = mapCanvas.value?.getBoundingClientRect() ?? { left: 0, top: 0 };
+  const pX = coords.left;
+  const pY = coords.top;
+
+  console.log(pX, pY);
+  console.log(e.clientX, e.clientY);
+
   const found = props.workplaces.find(
     (obj) =>
       e.clientX - pX - markerRadius < obj.x &&
@@ -68,7 +77,7 @@ function handleMapClick(e: MouseEvent) {
       e.clientY - pY - markerRadius < obj.y &&
       obj.y < e.clientY - pY + markerRadius
   );
-  console.log(found?.employee);
+  console.log(found);
 }
 </script>
 
@@ -80,11 +89,10 @@ function handleMapClick(e: MouseEvent) {
 
 <style scoped>
 .map {
-  position: relative;
   border: 2px solid black;
 }
 
-.canvas{
+.canvas {
   width: 100%;
 }
 </style>
