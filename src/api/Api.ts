@@ -19,6 +19,7 @@ export function workplacesUpd({ id, x, y, plan, employee }: WorkplacesProps) {
 
   const requestOptions: RequestInit = {
     method: "PUT",
+    credentials: 'same-origin',
     body: JSON.stringify(updatedWorkplaceData),
   };
 
