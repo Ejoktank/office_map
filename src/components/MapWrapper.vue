@@ -44,12 +44,12 @@ function deleteMarker() {
         <button @click="addMarker" class="map_menu-button">Добавить маркер</button>
         <button @click="deleteMarker" class="map_menu-button">Удалить маркер</button>
       </div>
+      <Map :workplaces="places" :plans="workplans" :state="mapState" />
       <div class="popup" :class="{ visible: addingMarker, hidden: !addingMarker }">
         <label for="input">Введите id сотрудника</label>
         <input type="text" id="input" />
         <button @click="">Ok</button>
       </div>
-      <Map :workplaces="places" :plans="workplans" :state="mapState" />
     </div>
   </template>
 </template>

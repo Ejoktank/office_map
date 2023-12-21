@@ -6,9 +6,9 @@ export function workplaces() {
     .catch((err) => console.error(err));
 }
 
-export function workplacesUpd({id, x, y, plan, employee}: WorkplacesProps) {
+export function workplacesUpd({ id, x, y, plan, employee }: WorkplacesProps) {
   const workplaceId: number = id; // Замените на фактический идентификатор рабочего места
-  const url: string = `/workplaces/${workplaceId}`;
+  const url: string = `/workplaces/${workplaceId}/`;
 
   const updatedWorkplaceData = {
     x: x,
@@ -19,9 +19,6 @@ export function workplacesUpd({id, x, y, plan, employee}: WorkplacesProps) {
 
   const requestOptions: RequestInit = {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(updatedWorkplaceData),
   };
 
@@ -39,6 +36,7 @@ export function workplacesUpd({id, x, y, plan, employee}: WorkplacesProps) {
       console.error("Error updating workplace:", error);
     });
 }
+
 export function plans() {
   return fetch("/plans/", { method: "GET" })
     .then((response) => response.json())

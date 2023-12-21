@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { PlansProps, WorkplacesProps } from "../App.vue";
 import { MapState } from "./MapWrapper.vue";
+import { workplacesUpd } from "../api/Api";
 
 const props = defineProps<{ workplaces: WorkplacesProps[]; plans: PlansProps[]; state: MapState }>();
 
@@ -77,11 +78,15 @@ function drawInfo(marker: WorkplacesProps) {
   ctx.font = "18px sans-serif";
   ctx.fillText("id: " + marker.id.toString(), marker.x + pX, marker.y + pY, 150);
   ctx.fillText("employee: " + marker.employee, marker.x + pX, marker.y + pY + lh, 150);
+  ctx.fillText("x: " + Math.floor(marker.x), marker.x + pX, marker.y + pY + 2 * lh, 150);
+  ctx.fillText("y: " + Math.floor(marker.y), marker.x + pX, marker.y + pY + 3 * lh, 150);
 }
 
 function addMarker(marker: WorkplacesProps) {
   console.log("adding marker");
+  console.log(marker);
 
+  workplacesUpd({ id: marker.id, employee: marker.employee, plan: marker.plan, x: marker.x, y: marker.y });
   drawMarker(marker);
 }
 
@@ -90,7 +95,7 @@ function handleMapClick(e: MouseEvent) {
   const pX = coords.left;
   const pY = coords.top;
 
-  console.log(Math.floor((e.clientX * 2) / aspectRatio.value), Math.floor(e.clientY * 2 * aspectRatio.value));
+  console.log(Math.floor(e.clientX), Math.floor(e.clientY));
 
   const clickedMarker = props.workplaces.find(
     (obj) =>
@@ -109,11 +114,11 @@ function handleMapClick(e: MouseEvent) {
       const maxId = props.workplaces.reduce((prev, current) => (prev.id > current.id ? prev : current)).id;
       const newMarker: WorkplacesProps = {
         id: maxId + 1,
-        x: e.clientX - pX,
-        y: e.clientY - pY,
+        x: Math.floor(e.clientX - pX),
+        y: Math.floor(e.clientY - pY),
         employee: 5,
         plan: 1,
-        ctx: context.value
+        ctx: context.value,
       };
       addMarker(newMarker);
       break;
